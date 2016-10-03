@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include<stdio.h>
 #include<stdlib.h>
+//#include<stdbool.h>
 /* Private typedef */
 /* Private define  */
 /* Private macro */
@@ -41,7 +42,6 @@ SOFTWARE.
 
 
 static __IO uint32_t TimingDelay;
-
 
 /**
 **===========================================================================
@@ -53,6 +53,8 @@ static __IO uint32_t TimingDelay;
 int main(void)
 {
 	int i = 0;
+	uint8_t butt;
+
 
 	/**
 	*  IMPORTANT NOTE!
@@ -82,17 +84,46 @@ int main(void)
 	GPIOA->OTYPER &=~ (0b1)<<(5); // pushpull
 	GPIOA->PUPDR |= (0b01)<<(5*2); // up
 	GPIOA->OSPEEDR |= (0b11)<<(5*2); // very high speed 11, very lov 00
+
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
+
+
+
+
 	/*
+	//==========================================================================================
+	//Uloha 1
 	GPIOA->ODR |= (0b1)<<(5); //zapnutie pomocou ODR
 	GPIOA->ODR &=~ (0b1)<<(5); //vypnutie pomocou ODR
+
+	GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
 	*/
-	//GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
 
+	//==========================================================================================
+	//Uloha 2 spolu s ulohou 3 B blikanie ako reakcia na tlacidlo
+	GPIOC->MODER &=~ (0b11)<<(26); // nastavenie modu na out cize bit 9,10 na 1,0
+	GPIOC->OTYPER &=~ (0b1)<<(13); // pushpull
+	GPIOC->PUPDR &=~ (0b11)<<(26); // up
 
+	while (1) // blikanie neoverene na doske uloha /3 A
+	{
+		if(!(GPIOC->IDR & (1<<13)))
+		{
+			GPIOA->ODR |= (0b1)<<(5);
+			//printf(1232432);
+		}
+		if((GPIOC->IDR & (1<<13)))
+		{
+			GPIOA->ODR &=~ (0b1)<<(5);
+			//printf(,654321);
+		}
 
+	}
 
-
-	while (1) // blikanie neoverene na doske uloha ///3 A
+	/*
+	//==========================================================================================
+	//Uloha 3
+	while (1) // blikanie neoverene na doske uloha /3 A
 	{
 		i++;
 		if (i % 100000 == 0)
@@ -101,6 +132,8 @@ int main(void)
 			i = 0;
 		}
 	}
+	*/
+
 	return 0;
 }
 
