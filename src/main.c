@@ -30,13 +30,17 @@ SOFTWARE.
 #include <stddef.h>
 #include "stm32l1xx.h"
 
-
+#include<stdio.h>
+#include<stdlib.h>
 /* Private typedef */
 /* Private define  */
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
 /* Private functions */
+
+
+static __IO uint32_t TimingDelay;
 
 
 /**
@@ -48,53 +52,56 @@ SOFTWARE.
 */
 int main(void)
 {
-  int i = 0;
+	int i = 0;
 
-  /**
-  *  IMPORTANT NOTE!
-  *  See the <system_*.c> file and how/if the SystemInit() function updates 
-  *  SCB->VTOR register. Sometimes the symbol VECT_TAB_SRAM needs to be defined 
-  *  when building the project if code has been located to RAM and interrupts 
-  *  are used. Otherwise the interrupt table located in flash will be used.
-  *  E.g.  SCB->VTOR = 0x20000000;  
-  */
+	/**
+	*  IMPORTANT NOTE!
+	*  See the <system_*.c> file and how/if the SystemInit() function updates
+	*  SCB->VTOR register. Sometimes the symbol VECT_TAB_SRAM needs to be defined
+	*  when building the project if code has been located to RAM and interrupts
+	*  are used. Otherwise the interrupt table located in flash will be used.
+	*  E.g.  SCB->VTOR = 0x20000000;
+	*/
 
-  /**
-  *  At this stage the microcontroller clock setting is already configured,
-  *  this is done through SystemInit() function which is called from startup
-  *  file (startup_stm32l1xx_hd.s) before to branch to application main.
-  *  To reconfigure the default setting of SystemInit() function, refer to
-  *  system_stm32l1xx.c file
-  */
+	/**
+	*  At this stage the microcontroller clock setting is already configured,
+	*  this is done through SystemInit() function which is called from startup
+	*  file (startup_stm32l1xx_hd.s) before to branch to application main.
+	*  To reconfigure the default setting of SystemInit() function, refer to
+	*  system_stm32l1xx.c file
+	*/
 
-  /* TODO - Add your application code here */
-
-
-  /* Infinite loop */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	/* TODO - Add your application code here */
 
 
-  GPIOA->MODER |= (0b01)<<(5*2);
-  GPIOA->OTYPER &=~ (0b1)<<(5);
-  GPIOA->PUPDR |= (0b01)<<(5*2);
-  GPIOA->OSPEEDR |= (0b11)<<(5*2);
-  /*
-  GPIOA->ODR |= (0b1)<<(5); //zapnutie pomocou ODR
-  GPIOA->ODR &=~ (0b1)<<(5); //vypnutie pomocou ODR
+	/* Infinite loop */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
-  GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
 
-  */
+	GPIOA->MODER |= (0b01)<<(5*2); // nastavenie modu na out cize bit 9,10 na 1,0
+	GPIOA->OTYPER &=~ (0b1)<<(5); // pushpull
+	GPIOA->PUPDR |= (0b01)<<(5*2); // up
+	GPIOA->OSPEEDR |= (0b11)<<(5*2); // very high speed 11, very lov 00
+	/*
+	GPIOA->ODR |= (0b1)<<(5); //zapnutie pomocou ODR
+	GPIOA->ODR &=~ (0b1)<<(5); //vypnutie pomocou ODR
+	*/
+	//GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
 
 
 
-  while (1)// blikanie neoverene na doske
-  {
-	i++;
-	if (i%1000)
-		GPIOA->ODR ^= (0b1)<<(5);
-  }
-  return 0;
+
+
+	while (1) // blikanie neoverene na doske uloha ///3 A
+	{
+		i++;
+		if (i % 100000 == 0)
+		{
+			GPIOA->ODR ^= (0b1)<<(5);
+			i = 0;
+		}
+	}
+	return 0;
 }
 
 #ifdef  USE_FULL_ASSERT
