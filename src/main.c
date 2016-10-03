@@ -78,16 +78,21 @@ int main(void)
   GPIOA->OTYPER &=~ (0b1)<<(5);
   GPIOA->PUPDR |= (0b01)<<(5*2);
   GPIOA->OSPEEDR |= (0b11)<<(5*2);
-
+  /*
   GPIOA->ODR |= (0b1)<<(5); //zapnutie pomocou ODR
   GPIOA->ODR &=~ (0b1)<<(5); //vypnutie pomocou ODR
 
   GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
 
-  /* Infinite loop */
-  while (1)
+  */
+
+
+
+  while (1)// blikanie neoverene na doske
   {
 	i++;
+	if (i%1000)
+		GPIOA->ODR ^= (0b1)<<(5);
   }
   return 0;
 }
