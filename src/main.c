@@ -107,11 +107,11 @@ int main(void)
 
 	//==========================================================================================
 	//Uloha 2 spolu s ulohou 3 B blikanie ako reakcia na tlacidlo
-	GPIOC->MODER &=~ (0b11)<<(26); // nastavenie modu na out cize bit 9,10 na 1,0
+	GPIOC->MODER &=~ (0b11)<<(26); // nastavenie modu na input cize na 0,0
 	GPIOC->OTYPER &=~ (0b1)<<(13); // pushpull
-	GPIOC->PUPDR &=~ (0b11)<<(26); // up
+	GPIOC->PUPDR &=~ (0b11)<<(26); // nopull
 	/*
-	while (1) // blikanie neoverene na doske uloha /3 A
+	while (1) // prepinanie ledky uloha /2 + 3 B
 	{
 		if(!(GPIOC->IDR & (1<<13)))
 		{
@@ -129,7 +129,7 @@ int main(void)
 	/*
 	//==========================================================================================
 	//Uloha 3
-	while (1) // blikanie neoverene na doske uloha /3 A
+	while (1) // // blikanie uloha /3 A
 	{
 		i++;
 		if (i % 100000 == 0)
