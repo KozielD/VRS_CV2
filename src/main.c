@@ -90,21 +90,27 @@ int main(void)
 
 
 
-	/*
+
 	//==========================================================================================
-	//Uloha 1
+	//Uloha 1 ODR
 	GPIOA->ODR |= (0b1)<<(5); //zapnutie pomocou ODR
 	GPIOA->ODR &=~ (0b1)<<(5); //vypnutie pomocou ODR
-
 	GPIOA->ODR ^= (0b1)<<(5); //prepinanie pomocou ODR
-	*/
+
+
+
+	//==========================================================================================
+	//Uloha 1 BSRR
+	GPIOA->BSRRL |= (0b1)<<(5); //zapnutie pomocou BSRR
+	GPIOA->BSRRH |= (0b1)<<(21); //vypnutie pomocou BSRR
+
 
 	//==========================================================================================
 	//Uloha 2 spolu s ulohou 3 B blikanie ako reakcia na tlacidlo
 	GPIOC->MODER &=~ (0b11)<<(26); // nastavenie modu na out cize bit 9,10 na 1,0
 	GPIOC->OTYPER &=~ (0b1)<<(13); // pushpull
 	GPIOC->PUPDR &=~ (0b11)<<(26); // up
-
+	/*
 	while (1) // blikanie neoverene na doske uloha /3 A
 	{
 		if(!(GPIOC->IDR & (1<<13)))
@@ -119,7 +125,7 @@ int main(void)
 		}
 
 	}
-
+	*/
 	/*
 	//==========================================================================================
 	//Uloha 3
